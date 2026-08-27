@@ -22,6 +22,25 @@
       "handover_reason": "sistema di migrazione completato; il caso tipo di Raf va ancora definito",
       "head_at_handover": "dea4b58f47dae5b2d7142edcc32c72c846fca856",
       "successor": null
+    },
+    {
+      "seq": 2,
+      "session_id": "session_014mwzUqCmwUr7mQLNZ4NsB3",
+      "url": "https://claude.ai/code/session_014mwzUqCmwUr7mQLNZ4NsB3",
+      "role": "successor",
+      "parent": "session_01UfZ6Q3wgowEGPz8TjZrLXa",
+      "status": "active",
+      "branch": "claude/migration-recovery-system-o6wzz4",
+      "environment_id": "",
+      "model": "claude-opus-5",
+      "permission_mode": "auto",
+      "title": "[#2] VoicePipeline — migrazione e ripresa",
+      "opened_at": "2026-08-27T06:57:39Z",
+      "head_at_open": "91b0fd851576545fcfa02004948ae4e011334653",
+      "closed_at": null,
+      "handover_reason": null,
+      "head_at_handover": null,
+      "successor": null
     }
   ]
 }
