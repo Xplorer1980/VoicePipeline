@@ -170,14 +170,11 @@ def cmd_handoff(args):
     link["handover_reason"] = args.reason
     link["head_at_handover"] = git("rev-parse", "HEAD", default="")
     if args.successor:
+        # Registriamo SOLO il puntatore. La voce del successore la crea il
+        # successore stesso con 'adopt': se la creassimo anche noi, due
+        # sessioni scriverebbero la stessa voce sullo stesso branch e il
+        # riallineamento produrrebbe un duplicato silenzioso.
         link["successor"] = args.successor
-        if not find(data, args.successor):
-            seq = max((l["seq"] for l in data["chain"]), default=0) + 1
-            heir = new_link(seq, args.successor, "successor", args.session, args)
-            heir["status"] = "declared"      # dichiarato dal predecessore, non ancora avviato
-            heir["opened_at"] = None
-            heir["head_at_open"] = None
-            data["chain"].append(heir)
     save(data)
     print(f"Consegna registrata per {args.session}: {args.reason}")
     cmd_show(args)
@@ -202,6 +199,10 @@ def cmd_show(args):
             print(f"        aperta   : {link['opened_at']}")
         if link["closed_at"]:
             print(f"        chiusa   : {link['closed_at']}  ({link['handover_reason'] or 'motivo non registrato'})")
+        heir = link.get("successor")
+        if heir and not find(data, heir):
+            print(f"        erede    : {heir} — dichiarato, non ancora presentatosi")
+            print(f"                   {SESSION_URL.format(heir)}")
         print()
 
 
@@ -239,6 +240,44 @@ def cmd_validate(args):
     print(f"  OK: catena integra ({len(data['chain'])} sessioni, 1 attiva).")
 
 
+def cmd_repair(args):
+    """Fonde le voci duplicate e chiude le biforcazioni."""
+    data = load()
+    merged, order = {}, []
+    for link in data["chain"]:
+        sid = link["session_id"]
+        if sid not in merged:
+            merged[sid] = link
+            order.append(sid)
+            continue
+        # duplicato: teniamo la voce piu' informativa
+        keep, drop = merged[sid], link
+        rank = {"active": 3, "handed_over": 2, "declared": 1, "abandoned": 0}
+        if rank.get(drop["status"], 0) > rank.get(keep["status"], 0):
+            keep, drop = drop, keep
+        for field, value in drop.items():
+            if value not in (None, "", []) and keep.get(field) in (None, "", []):
+                keep[field] = value
+        merged[sid] = keep
+        print(f"  fuse due voci per {sid} -> stato '{keep['status']}'")
+
+    chain = [merged[sid] for sid in order]
+    for i, link in enumerate(chain, start=1):
+        link["seq"] = i
+
+    actives = [l for l in chain if l["status"] == "active"]
+    for stale in actives[:-1]:
+        stale["status"] = "handed_over"
+        stale["closed_at"] = stale.get("closed_at") or now()
+        stale["handover_reason"] = stale.get("handover_reason") or "chiusa da repair: biforcazione"
+        print(f"  chiusa sessione attiva sorpassata: {stale['session_id']}")
+
+    data["chain"] = chain
+    save(data)
+    print("  riparazione completata.")
+    cmd_validate(args)
+
+
 def main():
     os.chdir(repo_root())
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -260,7 +299,8 @@ def main():
     p.add_argument("--successor"); p.add_argument("--reason", required=True)
     common(p); p.set_defaults(func=cmd_handoff)
 
-    for name, fn in (("show", cmd_show), ("current", cmd_current), ("validate", cmd_validate)):
+    for name, fn in (("show", cmd_show), ("current", cmd_current),
+                     ("validate", cmd_validate), ("repair", cmd_repair)):
         p = sub.add_parser(name); common(p); p.set_defaults(func=fn)
 
     args = ap.parse_args()

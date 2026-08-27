@@ -28,6 +28,12 @@ FATTO E VERIFICATO in questa sessione:
   template non compilato, rifiuta le sezioni vuote, rifiuta le azioni
   numerate senza testo. Il push ha retry esponenziale (2/4/8/16s) e in caso di
   fallimento BLOCCA la creazione del successore.
+- `scripts/push_state.sh` — commit + push dello stato resistente alle corse
+  (fetch, rebase, retry 2/4/8/16s). Verificato sul campo: al primo utilizzo
+  reale ha riallineato un push concorrente del successore senza perdere nulla.
+- `scripts/lineage.py repair` — fonde voci duplicate e chiude biforcazioni.
+  Verificato: ha riparato un duplicato reale generato dalla convivenza
+  predecessore/successore.
 - `.claude/skills/migrazione/SKILL.md` — protocollo operativo completo.
 - `CLAUDE.md` — memoria di repo: ogni sessione futura vede il protocollo
   senza doverlo cercare.
@@ -63,6 +69,14 @@ IN CORSO / NON ANCORA FATTO:
   `create_session` e' un tool MCP: uno script di shell non puo' chiamarlo.
   `handover.sh` prepara tutto e stampa i parametri esatti; la chiamata la fa
   l'agente. Non tentare di automatizzarla via curl.
+- **Una voce della catena ha un solo autore.** Il successore crea la propria
+  voce con `adopt`; il predecessore registra solo il puntatore. Imparato sul
+  campo: quando entrambi scrivevano la stessa voce, il rebase applicava
+  entrambe le versioni senza conflitto testuale e la catena si ritrovava con
+  un duplicato silenzioso. Non reintrodurre la doppia scrittura.
+- **Lo stato di catena si pusha con `push_state.sh`, mai con `git push`
+  diretto.** Predecessore e successore convivono per qualche minuto sullo
+  stesso branch e le corse sono la norma, non l'eccezione.
 - **Documento di consegna in italiano.** Raf lavora in italiano; il documento
   lo legge anche lui, non solo il successore.
 
@@ -89,7 +103,8 @@ IN CORSO / NON ANCORA FATTO:
 - Comandi:
   - `./scripts/resume.sh` — ripresa (prima cosa da fare in una sessione nuova)
   - `./scripts/handover.sh --reason "..."` — consegna
-  - `python3 scripts/lineage.py show|validate` — stato della catena
+  - `python3 scripts/lineage.py show|validate|repair` — stato della catena
+  - `./scripts/push_state.sh "msg"` — commit + push a prova di corsa
 - Nessuna dipendenza esterna: bash, git, python3 (stdlib). Niente da
   installare.
 - Credenziali: nessuna in gioco. Il push usa quelle gia' iniettate

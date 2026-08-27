@@ -165,11 +165,25 @@ La catena registra solo le sessioni, che sono le cose che sopravvivono.
 python3 scripts/lineage.py show       # chi ha lavorato, quando, chi ha passato a chi
 python3 scripts/lineage.py validate   # biforcazioni, predecessori orfani, duplicati
 python3 scripts/lineage.py current    # sessione attiva, in json
+python3 scripts/lineage.py repair     # fonde duplicati e chiude biforcazioni
 ./scripts/resume.sh                   # stato completo (sola lettura, sempre sicuro)
 ./scripts/handover.sh --reason x --dry-run   # valida senza committare
 ```
 
-Se `validate` segnala una biforcazione: decidi quale sessione prosegue, chiudi
-l'altra a mano in `lineage.json` (`status: "abandoned"`), committa. Non
-lasciare due sessioni attive: si sovrascrivono a vicenda e la prossima
+Se `validate` segnala una biforcazione o un duplicato, parti da:
+
+```bash
+python3 scripts/lineage.py repair
+```
+
+Fonde le voci doppie tenendo la piu' informativa e chiude le sessioni attive
+sorpassate. Se dopo `repair` restano due sessioni legittimamente attive,
+decidi quale prosegue e chiudi l'altra a mano (`status: "abandoned"`): due
+sessioni attive sullo stesso branch si sovrascrivono a vicenda e la prossima
 consegna eredita uno stato incoerente.
+
+**Regola che previene il problema alla radice:** una voce della catena ha un
+solo autore. Il successore crea la propria voce con `adopt`; il predecessore
+registra solo il *puntatore* al successore. Se entrambi scrivessero la stessa
+voce, il riallineamento dei due push produrrebbe un duplicato che nessun merge
+segnala, perche' testualmente non c'e' conflitto.
