@@ -1,7 +1,7 @@
 # Passaggio di consegne
 
 **Aggiornato:** 2026-08-27T06:56:32Z
-**Sessione:** session_01UfZ6Q3wgowEGPz8TjZrLXa
+**Sessione:** session_014mwzUqCmwUr7mQLNZ4NsB3
 **Branch:** claude/migration-recovery-system-o6wzz4
 
 ## 1. Missione
@@ -37,6 +37,19 @@ FATTO E VERIFICATO in questa sessione:
 - `.claude/skills/migrazione/SKILL.md` — protocollo operativo completo.
 - `CLAUDE.md` — memoria di repo: ogni sessione futura vede il protocollo
   senza doverlo cercare.
+
+VERIFICATO DALLA SESSIONE #2 (sul campo, non a tavolino):
+
+- `push_state.sh` e `lineage.py repair` funzionano davvero: all'avvio di
+  questa sessione la catena era duplicata (declared + active) per un push
+  incrociato, e `repair` l'ha riparata. La rimozione della doppia scrittura in
+  `handoff` toglie la causa. Confermato: `validate` torna integro e la voce
+  fusa conserva `environment_id` dal predecessore e `head_at_open` dal
+  successore.
+- Nota per chi verra': la sessione #2 aveva scritto un `dedupe` proprio, in
+  parallelo e senza saperlo, mentre la #1 scriveva `repair`. E' stato scartato
+  a favore di `repair`, piu' completo (copre anche la biforcazione). Lezione
+  gia' pagata: **prima di scrivere, guarda cosa e' arrivato su origin.**
 
 IN CORSO / NON ANCORA FATTO:
 
@@ -112,6 +125,16 @@ IN CORSO / NON ANCORA FATTO:
 
 ## 7. Questioni aperte per Raf
 
+**Poste dalla sessione #2 il 2026-08-27, in attesa di risposta.**
+
 1. Qual e' il "caso tipo" da affrontare? (Detto a fine primo messaggio, mai
-   specificato.)
+   specificato.) Il repo oggi contiene *solo* il meccanismo di migrazione:
+   nessun codice di dominio VoicePipeline. Senza questa risposta non c'e'
+   lavoro di dominio da iniziare, e non ha senso inventarlo.
 2. Il lavoro di dominio va su questo branch o ne vuole uno separato?
+3. **La sessione #1 e' ancora attiva** dopo aver consegnato: alle 07:01 stava
+   ancora scrivendo sul branch. Il registro la da' per `handed_over` ed e'
+   corretto, ma finche' lavora davvero le sessioni attive sono due e i push si
+   incrociano (e' gia' successo due volte in dieci minuti). Raf deve decidere
+   chi prosegue: la #2 la considera chiusa e non tocchera' quel che lei
+   pusha.
