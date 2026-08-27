@@ -99,8 +99,7 @@ cat <<INSTR
   2. Registra la presa in carico:
        python3 scripts/lineage.py adopt --session <TUO_ID> \\
          --model <modello> --permission-mode <modo> --title "<titolo>"
-       git add -A && git commit -m "chain: presa in carico <TUO_ID>"
-       git push -u origin $BRANCH
+       ./scripts/push_state.sh "chain: presa in carico <TUO_ID>"
   3. Riprendi dal punto 1 di "Prossime azioni" qui sopra.
   4. Mantieni HANDOVER.md aggiornato mentre lavori: e' l'unica cosa che
      sopravvive a questo container.

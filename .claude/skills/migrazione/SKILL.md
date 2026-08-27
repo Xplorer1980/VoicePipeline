@@ -40,9 +40,14 @@ serve a `validate` per accorgersi delle biforcazioni:
 ```bash
 python3 scripts/lineage.py adopt --session <TUO_SESSION_ID> \
   --model claude-opus-5 --permission-mode auto --title "<titolo>"
-git add -A && git commit -m "chain: presa in carico <TUO_SESSION_ID>"
-git push -u origin <branch>
+./scripts/push_state.sh "chain: presa in carico <TUO_SESSION_ID>"
 ```
+
+Usa sempre `push_state.sh` e non `git push` diretto per lo stato di catena:
+predecessore e successore convivono per qualche minuto e pushano sullo stesso
+branch, quindi il push va riallineato prima di essere ritentato. Se la tua
+voce risulta gia' "dichiarata" dal predecessore, `adopt` la promuove ad attiva
+invece di duplicarla.
 
 Il tuo session id lo ottieni dal tool `get_session` (campo `ccr.id`).
 
@@ -98,7 +103,7 @@ consegna e' lavoro perso, non lavoro rimandato.
    ```bash
    python3 scripts/lineage.py handoff --session <TUO_ID> \
      --successor <NUOVO_ID> --reason "..."
-   git add -A && git commit -m "chain: consegna a <NUOVO_ID>" && git push -u origin <branch>
+   ./scripts/push_state.sh "chain: consegna a <NUOVO_ID>"
    ```
 5. **Comunica a Raf l'url del successore**: `https://claude.ai/code/<NUOVO_ID>`.
    Una sessione che non sa raggiungere non gli serve a niente.
@@ -156,6 +161,7 @@ La catena registra solo le sessioni, che sono le cose che sopravvivono.
 ## G. Diagnostica
 
 ```bash
+./scripts/push_state.sh "msg"         # commit + push dello stato, a prova di corsa
 python3 scripts/lineage.py show       # chi ha lavorato, quando, chi ha passato a chi
 python3 scripts/lineage.py validate   # biforcazioni, predecessori orfani, duplicati
 python3 scripts/lineage.py current    # sessione attiva, in json

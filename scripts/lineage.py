@@ -123,8 +123,22 @@ def cmd_init(args):
 
 def cmd_adopt(args):
     data = load()
-    if find(data, args.session):
-        print(f"La sessione {args.session} e' gia' nella catena: nessuna modifica.")
+    existing = find(data, args.session)
+    if existing is not None:
+        # il predecessore puo' averci gia' dichiarati prima di morire: promuoviamo
+        if existing["status"] == "declared":
+            existing["status"] = "active"
+            existing["opened_at"] = now()
+            existing["head_at_open"] = git("rev-parse", "HEAD", default="")
+            for field, value in (("model", args.model), ("permission_mode", args.permission_mode),
+                                 ("title", args.title), ("environment_id", args.env)):
+                if value:
+                    existing[field] = value
+            save(data)
+            print(f"Presa in carico confermata: #{existing['seq']} {args.session} (era dichiarata dal predecessore)")
+        else:
+            print(f"La sessione {args.session} e' gia' attiva nella catena: nessuna modifica.")
+        cmd_show(args)
         return
     parent = args.parent
     if parent is None:

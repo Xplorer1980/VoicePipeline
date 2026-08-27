@@ -1,10 +1,10 @@
-Sei il SUCCESSORE nella catena di lavoro "(missione non registrata)".
+Sei il SUCCESSORE nella catena di lavoro "Sistema di migrazione e ripresa per il lavoro su VoicePipeline".
 
-  predecessore : non identificato
+  predecessore : session_01UfZ6Q3wgowEGPz8TjZrLXa
   repo         : Xplorer1980/VoicePipeline
   branch       : claude/migration-recovery-system-o6wzz4   (gia' in checkout, contiene tutto lo stato)
-  stato a      : dea4b58f47dae5b2d7142edcc32c72c846fca856
-  motivo       : verifica del sistema
+  stato a      : 91b0fd851576545fcfa02004948ae4e011334653
+  motivo       : sistema di migrazione completato; il caso tipo di Raf va ancora definito
 
 PRIMA AZIONE, prima di qualsiasi altra cosa e prima di rispondere a Raf:
 
