@@ -99,6 +99,12 @@ IN CORSO / NON ANCORA FATTO:
   riceve messaggi (`SendMessage`) ma non puo' rimandarne indietro. Non
   progettare niente che aspetti una risposta dal successore: la comunicazione
   di ritorno passa dal repo (commit sul branch) o da Raf.
+- **Fra due sessioni cloud non si parla, in nessuna direzione.** Verificato
+  dalla #2: `SendMessage` verso il predecessore risponde "No agent named ...
+  is reachable" e `ListAgents` non vede nessuno. Non e' solo il ritorno a
+  mancare, e' il canale intero: due container cloud diversi non si vedono. Se
+  serve coordinare due sessioni vive — chi si ferma, chi prosegue — passa da
+  Raf o dal branch. Non progettare niente che presuma un contatto diretto.
 - **`ListAgents` non vede le sessioni cloud finche' non sono avviate.** Subito
   dopo `create_session` la sessione puo' non comparire: non e' un errore, non
   ricrearla.
