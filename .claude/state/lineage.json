@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "mission": "Sistema di migrazione e ripresa per il lavoro su VoicePipeline",
+  "repo": "Xplorer1980/VoicePipeline",
+  "created_at": "2026-08-27T06:55:41Z",
+  "chain": [
+    {
+      "seq": 1,
+      "session_id": "session_01UfZ6Q3wgowEGPz8TjZrLXa",
+      "url": "https://claude.ai/code/session_01UfZ6Q3wgowEGPz8TjZrLXa",
+      "role": "root",
+      "parent": null,
+      "status": "handed_over",
+      "branch": "claude/migration-recovery-system-o6wzz4",
+      "environment_id": "env_01XdV8tRyukwWqwUPFNWLNSf",
+      "model": "claude-opus-5",
+      "permission_mode": "auto",
+      "title": "Sistema di migrazione e ripresa",
+      "opened_at": "2026-08-27T06:55:41Z",
+      "head_at_open": "dea4b58f47dae5b2d7142edcc32c72c846fca856",
+      "closed_at": "2026-08-27T06:56:32Z",
+      "handover_reason": "sistema di migrazione completato; il caso tipo di Raf va ancora definito",
+      "head_at_handover": "dea4b58f47dae5b2d7142edcc32c72c846fca856",
+      "successor": null
+    }
+  ]
+}
