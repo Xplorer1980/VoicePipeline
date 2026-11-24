@@ -1,5 +1,13 @@
 # To-do e incombenze aperte
 
+## File dal PC (ricostruiti dalle chat del 24/11, link pubblici)
+
+- **Sospesi e todolist** (`B:\DB_260922\LAVORO\SOSPESI_RIPRISTINO_20261124.md`, completo): https://github.com/Xplorer1980/VoicePipeline/blob/claude/beautiful-ptolemy-hgm1bg/pc/IN_SOSPESO.md
+- **Log** (`LOG_MODIFICHE_SENZA_CONSENSO_20261124.md`, parziale: mancano una decina di righe scritte da Codex; le 4 proposte sono alle righe 47-49 e 94): https://github.com/Xplorer1980/VoicePipeline/blob/claude/beautiful-ptolemy-hgm1bg/pc/LOG.md
+- **Resoconto** (`RESOCONTO_PER_RAF_20261124.md`, quasi completo): https://github.com/Xplorer1980/VoicePipeline/blob/claude/beautiful-ptolemy-hgm1bg/pc/RESOCONTO.md
+
+La lista di oltre 200 cose in sospeso non compare in nessuna chat: va presa dal PC.
+
 Aggiornato: martedì 24/11/2026, ~12:45 (ora del PC)
 
 Ricostruito leggendo le ultime sessioni dal PC (Gancio 82ff1c66 "testimone n.165"
